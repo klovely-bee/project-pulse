@@ -4,6 +4,20 @@ import StudentRegisterView from '../features/auth/views/StudentRegisterView.vue'
 import InstructorRegisterView from '../features/auth/views/InstructorRegisterView.vue'
 import UserProfileView from '../features/user/views/UserProfileView.vue'
 import EditProfileView from '../features/user/views/EditProfileView.vue'
+import CreateRubricView from '../features/rubric/views/CreateRubricView.vue'
+import CreateSectionView from '../features/section/views/CreateSectionView.vue'
+import SectionListView from '../features/section/views/SectionListView.vue'
+import SectionDetailView from '../features/section/views/SectionDetailView.vue'
+import EditSectionView from '../features/section/views/EditSectionView.vue'
+import SectionWeeksView from '../features/section/views/SectionWeeksView.vue'
+import CreateTeamView from '../features/team/views/CreateTeamView.vue'
+import TeamListBySectionView from '../features/team/views/TeamListBySectionView.vue'
+import EditTeamView from '../features/team/views/EditTeamView.vue'
+import TeamAssignmentsView from '../features/team/views/TeamAssignmentsView.vue'
+
+const PlaceholderRouteView = {
+  template: '<div></div>',
+}
 
 const routes = [
   {
@@ -30,6 +44,56 @@ const routes = [
     path: '/users/:id/edit',
     name: 'edit-profile',
     component: EditProfileView,
+  },
+  {
+    path: '/rubrics/create',
+    name: 'rubric-create',
+    component: CreateRubricView,
+  },
+  {
+    path: '/sections',
+    name: 'section-list',
+    component: SectionListView,
+  },
+  {
+    path: '/sections/create',
+    name: 'section-create',
+    component: CreateSectionView,
+  },
+  {
+    path: '/sections/:id',
+    name: 'section-detail',
+    component: SectionDetailView,
+  },
+  {
+    path: '/sections/:id/edit',
+    name: 'section-edit',
+    component: EditSectionView,
+  },
+  {
+    path: '/sections/:id/weeks',
+    name: 'section-weeks',
+    component: SectionWeeksView,
+  },
+  {
+    path: '/teams/create',
+    name: 'team-create',
+    component: CreateTeamView,
+  },
+  {
+    path: '/teams/section/:sectionId',
+    name: 'team-list-by-section',
+    component: TeamListBySectionView,
+  },
+  {
+    path: '/teams/:id/edit',
+    name: 'team-edit',
+    component: EditTeamView,
+  },
+  {
+    path: '/teams/:id/assignments',
+    name: 'team-assignments',
+    component: TeamAssignmentsView,
   },
   {
     path: '/:pathMatch(.*)*',
