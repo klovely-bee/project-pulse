@@ -6,6 +6,7 @@ import AdminDashboardView from '../features/admin/views/AdminDashboardView.vue'
 import SectionWorkspaceView from '../features/sections/views/SectionWorkspaceView.vue'
 import TeamWorkspaceView from '../features/teams/views/TeamWorkspaceView.vue'
 import ReportsWorkspaceView from '../features/reports/views/ReportsWorkspaceView.vue'
+import WARView from '../features/war/views/WARView.vue'
 
 const routes = [
   {
@@ -17,12 +18,10 @@ const routes = [
       { path: 'admin', name: 'admin', component: AdminDashboardView },
       { path: 'sections', name: 'sections', component: SectionWorkspaceView },
       { path: 'teams', name: 'teams', component: TeamWorkspaceView },
-      { path: 'reports', name: 'reports', component: ReportsWorkspaceView }
+      { path: 'reports', name: 'reports', component: ReportsWorkspaceView },
+      { path: 'war', name: 'war', component: WARView },
     ]
   }
 ]
 
-export default createRouter({
-  history: createWebHistory(),
-  routes
-})
+export default createRouter({ history: createWebHistory(), routes })
