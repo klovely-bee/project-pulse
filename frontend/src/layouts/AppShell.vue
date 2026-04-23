@@ -14,6 +14,7 @@
         <RouterLink to="/teams">Teams</RouterLink>
         <RouterLink to="/people/students">Students</RouterLink>
         <RouterLink to="/people/instructors">Instructors</RouterLink>
+        <RouterLink to="/war">Submit WAR</RouterLink>
         <RouterLink to="/reports">Reports</RouterLink>
       </nav>
     </header>

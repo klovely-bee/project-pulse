@@ -12,6 +12,7 @@ import StudentInviteView from '../features/people/views/StudentInviteView.vue'
 import InstructorListView from '../features/people/views/InstructorListView.vue'
 import InstructorDetailView from '../features/people/views/InstructorDetailView.vue'
 import InstructorInviteView from '../features/people/views/InstructorInviteView.vue'
+import WARView from '../features/war/views/WARView.vue'
 
 const routes = [
   {
@@ -30,6 +31,7 @@ const routes = [
       { path: 'people/instructors', name: 'instructors', component: InstructorListView },
       { path: 'people/instructors/invite', name: 'instructor-invite', component: InstructorInviteView },
       { path: 'people/instructors/:id', name: 'instructor-detail', component: InstructorDetailView },
+      { path: 'war', name: 'war', component: WARView },
     ]
   }
 ]
