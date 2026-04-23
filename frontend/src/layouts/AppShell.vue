@@ -4,9 +4,7 @@
       <div>
         <p class="eyebrow">TCU Senior Design</p>
         <h1>Project Pulse</h1>
-        <p class="subtitle">
-          Weekly activity reports, peer evaluations, and section management in one place.
-        </p>
+        <p class="subtitle">Weekly activity reports, peer evaluations, and section management in one place.</p>
       </div>
       <nav class="nav-links">
         <RouterLink to="/">Home</RouterLink>
@@ -14,6 +12,8 @@
         <RouterLink to="/admin">Admin</RouterLink>
         <RouterLink to="/sections">Sections</RouterLink>
         <RouterLink to="/teams">Teams</RouterLink>
+        <RouterLink to="/people/students">Students</RouterLink>
+        <RouterLink to="/people/instructors">Instructors</RouterLink>
         <RouterLink to="/reports">Reports</RouterLink>
       </nav>
     </header>
@@ -22,6 +22,4 @@
     </main>
   </div>
 </template>
-
-<script setup>
-</script>
+<script setup></script>
