@@ -19,10 +19,13 @@ import InstructorInviteView from '../features/people/views/InstructorInviteView.
 import WARView from '../features/war/views/WARView.vue'
 
 const routes = [
-  // Auth routes
-  { path: '/login', name: 'login', component: LoginView },
-  { path: '/register/student', name: 'register-student', component: StudentRegisterView },
-  { path: '/register/instructor', name: 'register-instructor', component: InstructorRegisterView },
+  // Root redirect
+  { path: '/', redirect: '/login' },
+
+  // Auth routes (public — no AppShell)
+  { path: '/login', name: 'login', component: LoginView, meta: { public: true } },
+  { path: '/register/student', name: 'register-student', component: StudentRegisterView, meta: { public: true } },
+  { path: '/register/instructor', name: 'register-instructor', component: InstructorRegisterView, meta: { public: true } },
   { path: '/users/:id', name: 'user-profile', component: UserProfileView },
   { path: '/users/:id/edit', name: 'edit-profile', component: EditProfileView },
 
