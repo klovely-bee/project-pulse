@@ -27,29 +27,22 @@ import InstructorListView from '../features/people/views/InstructorListView.vue'
 import InstructorDetailView from '../features/people/views/InstructorDetailView.vue'
 import InstructorInviteView from '../features/people/views/InstructorInviteView.vue'
 
-// WAR
+// WAR / reports
 import WARView from '../features/war/views/WARView.vue'
 import ReportsWorkspaceView from '../features/reports/views/ReportsWorkspaceView.vue'
 
 const routes = [
+  // Root redirect
   { path: '/', redirect: '/login' },
+
+  // Old shell shortcuts
   { path: '/admin', redirect: '/sections' },
   { path: '/teams', redirect: '/sections' },
 
   // Auth routes
   { path: '/login', name: 'login', component: LoginView, meta: { public: true } },
-  {
-    path: '/register/student',
-    name: 'register-student',
-    component: StudentRegisterView,
-    meta: { public: true },
-  },
-  {
-    path: '/register/instructor',
-    name: 'register-instructor',
-    component: InstructorRegisterView,
-    meta: { public: true },
-  },
+  { path: '/register/student', name: 'register-student', component: StudentRegisterView, meta: { public: true } },
+  { path: '/register/instructor', name: 'register-instructor', component: InstructorRegisterView, meta: { public: true } },
   { path: '/users/:id', name: 'user-profile', component: UserProfileView },
   { path: '/users/:id/edit', name: 'edit-profile', component: EditProfileView },
 
@@ -73,7 +66,7 @@ const routes = [
   { path: '/people/instructors/invite', name: 'instructor-invite', component: InstructorInviteView },
   { path: '/people/instructors/:id', name: 'instructor-detail', component: InstructorDetailView },
 
-  // WAR
+  // WAR / reports
   { path: '/war', name: 'war', component: WARView },
   { path: '/reports', name: 'reports', component: ReportsWorkspaceView },
 
