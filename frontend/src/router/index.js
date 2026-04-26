@@ -29,12 +29,27 @@ import InstructorInviteView from '../features/people/views/InstructorInviteView.
 
 // WAR
 import WARView from '../features/war/views/WARView.vue'
+import ReportsWorkspaceView from '../features/reports/views/ReportsWorkspaceView.vue'
 
 const routes = [
+  { path: '/', redirect: '/login' },
+  { path: '/admin', redirect: '/sections' },
+  { path: '/teams', redirect: '/sections' },
+
   // Auth routes
-  { path: '/login', name: 'login', component: LoginView },
-  { path: '/register/student', name: 'register-student', component: StudentRegisterView },
-  { path: '/register/instructor', name: 'register-instructor', component: InstructorRegisterView },
+  { path: '/login', name: 'login', component: LoginView, meta: { public: true } },
+  {
+    path: '/register/student',
+    name: 'register-student',
+    component: StudentRegisterView,
+    meta: { public: true },
+  },
+  {
+    path: '/register/instructor',
+    name: 'register-instructor',
+    component: InstructorRegisterView,
+    meta: { public: true },
+  },
   { path: '/users/:id', name: 'user-profile', component: UserProfileView },
   { path: '/users/:id/edit', name: 'edit-profile', component: EditProfileView },
 
@@ -60,6 +75,7 @@ const routes = [
 
   // WAR
   { path: '/war', name: 'war', component: WARView },
+  { path: '/reports', name: 'reports', component: ReportsWorkspaceView },
 
   // Fallback
   { path: '/:pathMatch(.*)*', redirect: '/login' },

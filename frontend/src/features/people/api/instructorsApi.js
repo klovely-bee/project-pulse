@@ -1,15 +1,29 @@
-const BASE = '/api/instructors'
+import apiClient from '../../../shared/api/axios'
 
-async function handle(res) {
-  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || `HTTP ${res.status}`) }
-  if (res.status === 204) return null
-  return res.json()
+export async function findInstructors(name = '') {
+  const response = await apiClient.get('/instructors', {
+    params: name ? { name } : {},
+  })
+
+  return response.data.data
 }
 
-export const findInstructors = (name = '') =>
-  fetch(`${BASE}${name ? `?name=${encodeURIComponent(name)}` : ''}`).then(handle)
-export const getInstructor = (id) => fetch(`${BASE}/${id}`).then(handle)
-export const inviteInstructor = (data) =>
-  fetch(BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(handle)
-export const deactivateInstructor = (id) => fetch(`${BASE}/${id}/deactivate`, { method: 'PUT' }).then(handle)
-export const reactivateInstructor = (id) => fetch(`${BASE}/${id}/reactivate`, { method: 'PUT' }).then(handle)
+export async function getInstructor(id) {
+  const response = await apiClient.get(`/instructors/${id}`)
+  return response.data.data
+}
+
+export async function inviteInstructor(data) {
+  const response = await apiClient.post('/instructors', data)
+  return response.data.data
+}
+
+export async function deactivateInstructor(id) {
+  const response = await apiClient.put(`/instructors/${id}/deactivate`)
+  return response.data.data
+}
+
+export async function reactivateInstructor(id) {
+  const response = await apiClient.put(`/instructors/${id}/reactivate`)
+  return response.data.data
+}

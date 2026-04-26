@@ -1,14 +1,24 @@
-const BASE = '/api/students'
+import apiClient from '../../../shared/api/axios'
 
-async function handle(res) {
-  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || `HTTP ${res.status}`) }
-  if (res.status === 204) return null
-  return res.json()
+export async function findStudents(name = '') {
+  const response = await apiClient.get('/students', {
+    params: name ? { name } : {},
+  })
+
+  return response.data.data
 }
 
-export const findStudents = (name = '') =>
-  fetch(`${BASE}${name ? `?name=${encodeURIComponent(name)}` : ''}`).then(handle)
-export const getStudent = (id) => fetch(`${BASE}/${id}`).then(handle)
-export const inviteStudent = (data) =>
-  fetch(BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(handle)
-export const deleteStudent = (id) => fetch(`${BASE}/${id}`, { method: 'DELETE' }).then(handle)
+export async function getStudent(id) {
+  const response = await apiClient.get(`/students/${id}`)
+  return response.data.data
+}
+
+export async function inviteStudent(data) {
+  const response = await apiClient.post('/students', data)
+  return response.data.data
+}
+
+export async function deleteStudent(id) {
+  const response = await apiClient.delete(`/students/${id}`)
+  return response.data.data
+}

@@ -9,9 +9,9 @@
       <nav class="nav-links">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/admin">Admin</RouterLink>
+        <RouterLink to="/sections">Admin</RouterLink>
         <RouterLink to="/sections">Sections</RouterLink>
-        <RouterLink to="/teams">Teams</RouterLink>
+        <RouterLink to="/sections">Teams</RouterLink>
         <RouterLink to="/people/students">Students</RouterLink>
         <RouterLink to="/people/instructors">Instructors</RouterLink>
         <RouterLink to="/war">Submit WAR</RouterLink>
