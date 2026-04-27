@@ -26,7 +26,10 @@ async function loadUser() {
   }
 }
 
-onMounted(loadUser)
+onMounted(() => {
+  document.title = 'User Profile | Project Pulse'
+  loadUser()
+})
 </script>
 
 <template>
