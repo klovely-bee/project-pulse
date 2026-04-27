@@ -41,6 +41,10 @@ textarea {
   max-width: 640px;
   margin: 0 auto;
   padding: 32px 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .card {
