@@ -216,6 +216,7 @@ async function handleSubmit() {
 }
 
 onMounted(() => {
+  document.title = 'Reports | Project Pulse'
   loadReports()
 })
 </script>
