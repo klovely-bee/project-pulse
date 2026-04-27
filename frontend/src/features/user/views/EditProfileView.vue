@@ -60,7 +60,10 @@ async function handleSubmit() {
   }
 }
 
-onMounted(loadUser)
+onMounted(() => {
+  document.title = 'Edit Profile | Project Pulse'
+  loadUser()
+})
 </script>
 
 <template>
