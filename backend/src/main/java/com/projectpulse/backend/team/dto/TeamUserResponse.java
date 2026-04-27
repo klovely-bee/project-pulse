@@ -1,5 +1,6 @@
 package com.projectpulse.backend.team.dto;
 
+import com.projectpulse.backend.user.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,9 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateTeamRequest {
+public class TeamUserResponse {
 
     private Long id;
-    private String name;
-    private Long sectionId;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Role role;
+    private boolean active;
 }

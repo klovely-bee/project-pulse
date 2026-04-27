@@ -37,6 +37,17 @@ public class TeamController {
         return Result.success("Teams retrieved successfully", teamService.getTeamsBySection(sectionId));
     }
 
+    @GetMapping("/{id}")
+    public ApiResponse<TeamResponse> getTeamById(@PathVariable Long id) {
+        return Result.success("Team retrieved successfully", teamService.getTeamById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<TeamResponse> updateTeam(@PathVariable Long id, @RequestBody UpdateTeamRequest request) {
+        request.setId(id);
+        return Result.success("Team updated successfully", teamService.updateTeam(request));
+    }
+
     @PutMapping
     public ApiResponse<TeamResponse> updateTeam(@RequestBody UpdateTeamRequest request) {
         return Result.success("Team updated successfully", teamService.updateTeam(request));

@@ -1,7 +1,9 @@
 package com.projectpulse.backend.instructor.repository;
 
 import com.projectpulse.backend.instructor.domain.Instructor;
+import com.projectpulse.backend.user.domain.Role;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,6 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
       )
     """)
     List<Instructor> searchInstructors(@Param("name") String name);
+
+    Optional<Instructor> findByIdAndRole(Long id, Role role);
 }
