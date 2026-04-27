@@ -22,9 +22,18 @@ async function handleSubmit() {
   try {
     const response = await login({ ...form })
     const user = response.data.data
-    console.log(user)
     successMessage.value = response.data.message
-    await router.push(`/users/${user.id}`)
+    localStorage.setItem('currentUser', JSON.stringify(user))
+
+    if (user.role === 'ADMIN') {
+      await router.push('/sections')
+    } else if (user.role === 'STUDENT') {
+      await router.push('/war')
+    } else if (user.role === 'INSTRUCTOR') {
+      await router.push('/people/students')
+    } else {
+      await router.push(`/users/${user.id}`)
+    }
   } catch (error) {
     console.error('Login failed', error.response?.data ?? error)
     errorMessage.value =
