@@ -1,7 +1,9 @@
 package com.projectpulse.backend.student.repository;
 
 import com.projectpulse.backend.student.domain.Student;
+import com.projectpulse.backend.user.domain.Role;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
       )
     """)
     List<Student> searchStudents(@Param("name") String name);
+
+    Optional<Student> findByIdAndRole(Long id, Role role);
 }

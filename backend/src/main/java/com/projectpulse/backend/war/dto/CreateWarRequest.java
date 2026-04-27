@@ -1,4 +1,4 @@
-package com.projectpulse.backend.team.dto;
+package com.projectpulse.backend.war.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateTeamRequest {
+public class CreateWarRequest {
 
-    private Long id;
-    private String name;
-    private Long sectionId;
+    private Long userId;
+    private Long teamId;
+    private Integer weekNumber;
+    private String content;
 }

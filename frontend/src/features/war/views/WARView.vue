@@ -1,13 +1,15 @@
 <template>
-  <section>
+  <section class="page-container">
+    <div class="card">
     <p class="eyebrow">Student · UC-27</p>
     <h2>Weekly Activity Report</h2>
-    <p style="color:#64748b;font-size:13px;margin-bottom:20px">Log what you worked on this week. Be specific — include outcomes, hours, and blockers.</p>
+    <p class="page-subtitle">Log what you worked on this week. Include outcomes, hours, and blockers.</p>
 
     <p class="error" v-if="error">{{ error }}</p>
-    <div class="success-banner" v-if="submitted">WAR submitted for week {{ lastWeek }}!</div>
+    <div class="success-banner" v-if="submitted">WAR submitted for week {{ lastWeek }}.</div>
+    <p class="muted" v-if="historyLoading">Loading your WAR history...</p>
 
-    <form class="form-card" @submit.prevent="submit">
+    <form class="form" @submit.prevent="submit">
       <div class="form-group">
         <label>Team ID</label>
         <input v-model="form.teamId" type="number" placeholder="Enter your team ID" required />
@@ -36,38 +38,121 @@
         <button class="btn btn-primary" type="submit" :disabled="saving">{{ saving ? 'Submitting…' : 'Submit WAR' }}</button>
       </div>
     </form>
+
+    <div class="card" style="margin-top: 20px">
+      <h3 class="list-item-title">My WAR History</h3>
+      <p v-if="!historyLoading && warHistory.length === 0" class="muted">No WARs submitted yet.</p>
+
+      <div v-else class="list">
+        <article v-for="war in warHistory" :key="war.id" class="subcard">
+          <p><strong>Week:</strong> {{ war.weekNumber }}</p>
+          <p><strong>Team ID:</strong> {{ war.teamId }}</p>
+          <p><strong>Submitted:</strong> {{ formatDate(war.createdAt) }}</p>
+          <pre class="war-content">{{ war.content }}</pre>
+        </article>
+      </div>
+    </div>
+    </div>
   </section>
 </template>
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { createWar, getWarsByStudent } from '../services/warApi'
+
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
 
 const form = ref({ teamId: '', weekNumber: '', activities: [{ description: '', category: '', hours: 0 }] })
-const error = ref(''), submitted = ref(false), saving = ref(false), lastWeek = ref('')
+const warHistory = ref([])
+const error = ref('')
+const submitted = ref(false)
+const saving = ref(false)
+const historyLoading = ref(false)
+const lastWeek = ref('')
 
 const totalHours = computed(() => form.value.activities.reduce((s, a) => s + (Number(a.hours) || 0), 0).toFixed(1))
 
 function add() { form.value.activities.push({ description: '', category: '', hours: 0 }) }
 function remove(i) { form.value.activities.splice(i, 1) }
-function reset() { form.value.activities = [{ description: '', category: '', hours: 0 }]; form.value.weekNumber = ''; submitted.value = false; error.value = '' }
+function reset() {
+  form.value.teamId = ''
+  form.value.weekNumber = ''
+  form.value.activities = [{ description: '', category: '', hours: 0 }]
+  submitted.value = false
+  error.value = ''
+}
+
+function buildContent() {
+  return form.value.activities
+    .map((activity, index) => {
+      const hours = Number(activity.hours) || 0
+      const category = activity.category ? `Category: ${activity.category}` : 'Category: Unspecified'
+      return `Activity ${index + 1}: ${activity.description}\n${category}\nHours: ${hours}`
+    })
+    .join('\n\n')
+}
+
+function formatDate(value) {
+  if (!value) {
+    return 'Unknown'
+  }
+
+  return new Date(value).toLocaleString()
+}
+
+async function loadWarHistory() {
+  if (!currentUser?.id) {
+    warHistory.value = []
+    return
+  }
+
+  historyLoading.value = true
+
+  try {
+    const response = await getWarsByStudent(currentUser.id)
+    warHistory.value = response.data.data
+  } catch (e) {
+    error.value = e.response?.data?.message || e.message || 'Failed to load WAR history.'
+  } finally {
+    historyLoading.value = false
+  }
+}
 
 async function submit() {
   error.value = ''; submitted.value = false; saving.value = true
   try {
     const payload = {
+      userId: currentUser?.id,
       teamId: Number(form.value.teamId),
       weekNumber: Number(form.value.weekNumber),
-      activities: form.value.activities,
+      content: buildContent(),
     }
-    const res = await fetch('/api/war', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.message || `HTTP ${res.status}`) }
+
+    if (!payload.userId) {
+      throw new Error('No logged-in user found.')
+    }
+
+    await createWar(payload)
     lastWeek.value = form.value.weekNumber
     submitted.value = true
     reset()
-  } catch (e) { error.value = e.message }
+    await loadWarHistory()
+  } catch (e) { error.value = e.response?.data?.message || e.message || 'Failed to submit WAR.' }
   finally { saving.value = false }
 }
+
+onMounted(() => {
+  loadWarHistory()
+})
 </script>
+
+<style scoped>
+.war-content {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+</style>
