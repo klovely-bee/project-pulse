@@ -11,4 +11,6 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
     List<Evaluation> findByTeamIdOrderByCreatedAtDesc(Long teamId);
 
     List<Evaluation> findByEvaluateeIdOrderByCreatedAtDesc(Long evaluateeId);
+
+    List<Evaluation> findByTeamIdInOrderByCreatedAtDesc(List<Long> teamIds);
 }

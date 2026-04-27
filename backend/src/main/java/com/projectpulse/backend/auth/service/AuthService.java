@@ -7,6 +7,7 @@ import com.projectpulse.backend.auth.dto.StudentRegistrationRequest;
 import com.projectpulse.backend.user.domain.Role;
 import com.projectpulse.backend.user.domain.User;
 import com.projectpulse.backend.user.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,8 +59,11 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + request.getEmail()));
+        User user = findActiveUserByEmail(request.getEmail());
+
+        if (!user.isActive()) {
+            throw new RuntimeException("User account is inactive");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
@@ -74,5 +78,10 @@ public class AuthService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .build();
+    }
+
+    public User findActiveUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
 }

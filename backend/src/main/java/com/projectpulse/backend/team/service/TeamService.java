@@ -76,6 +76,7 @@ public class TeamService {
     public TeamResponse assignStudents(AssignUsersRequest request) {
         Team team = findTeamById(request.getTeamId());
         List<User> users = findUsersByIds(request.getUserIds());
+        validateRoles(users, com.projectpulse.backend.user.domain.Role.STUDENT, "student");
 
         team.getStudents().addAll(users);
 
@@ -86,6 +87,7 @@ public class TeamService {
     public TeamResponse removeStudents(AssignUsersRequest request) {
         Team team = findTeamById(request.getTeamId());
         List<User> users = findUsersByIds(request.getUserIds());
+        validateRoles(users, com.projectpulse.backend.user.domain.Role.STUDENT, "student");
 
         team.getStudents().removeAll(users);
 
@@ -96,6 +98,7 @@ public class TeamService {
     public TeamResponse assignInstructors(AssignUsersRequest request) {
         Team team = findTeamById(request.getTeamId());
         List<User> users = findUsersByIds(request.getUserIds());
+        validateRoles(users, com.projectpulse.backend.user.domain.Role.INSTRUCTOR, "instructor");
 
         team.getInstructors().addAll(users);
 
@@ -106,6 +109,7 @@ public class TeamService {
     public TeamResponse removeInstructors(AssignUsersRequest request) {
         Team team = findTeamById(request.getTeamId());
         List<User> users = findUsersByIds(request.getUserIds());
+        validateRoles(users, com.projectpulse.backend.user.domain.Role.INSTRUCTOR, "instructor");
 
         team.getInstructors().removeAll(users);
 
@@ -147,5 +151,12 @@ public class TeamService {
         }
 
         return users;
+    }
+
+    private void validateRoles(List<User> users, com.projectpulse.backend.user.domain.Role expectedRole, String roleLabel) {
+        boolean hasWrongRole = users.stream().anyMatch(user -> user.getRole() != expectedRole);
+        if (hasWrongRole) {
+            throw new RuntimeException("One or more users are not valid " + roleLabel + "s");
+        }
     }
 }
