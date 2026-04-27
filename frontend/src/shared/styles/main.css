@@ -27,6 +27,17 @@ a {
   min-height: 100vh;
 }
 
+.auth-route-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+
+.auth-route-shell .page-container {
+  width: min(100%, 440px);
+}
+
 .card h2 {
   margin: 0;
 }
