@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+  onMounted(() => { document.title = 'Register | Project Pulse' })
 import { RouterLink } from 'vue-router'
 import { registerStudent } from '../services/authApi'
 
