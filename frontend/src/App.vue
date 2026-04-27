@@ -8,6 +8,8 @@ const isPublicRoute = computed(() => Boolean(route.meta.public))
 </script>
 
 <template>
-  <RouterView v-if="isPublicRoute" />
+  <div v-if="isPublicRoute" class="auth-route-shell">
+    <RouterView />
+  </div>
   <AppShell v-else />
 </template>
