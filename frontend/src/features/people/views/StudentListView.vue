@@ -38,6 +38,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
+  onMounted (() => { document.title = 'Homepage | Project Pulse' })
 import { findStudents, deleteStudent } from '../api/studentsApi.js'
 const students = ref([]), query = ref(''), loading = ref(false), error = ref(''), deleting = ref(null)
 async function search() {
