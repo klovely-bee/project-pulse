@@ -141,6 +141,7 @@ async function submit() {
 }
 
 onMounted(() => {
+  document.title = 'Homepage | Project Pulse'
   loadWarHistory()
 })
 </script>

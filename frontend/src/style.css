@@ -9,78 +9,68 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
 }
-
 a {
   color: #2563eb;
   text-decoration: none;
 }
-
 a:hover {
   text-decoration: underline;
 }
-
 button,
 input,
 textarea {
   font: inherit;
 }
-
 #app {
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .page-container {
+  width: 100%;
   max-width: 640px;
-  margin: 0 auto;
   padding: 32px 16px;
 }
-
 .card {
   background: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   padding: 24px;
 }
-
 .page-title {
   margin: 0 0 8px;
   font-size: 28px;
+  text-align: center;
 }
-
 .page-subtitle {
   margin: 0 0 24px;
   color: #4b5563;
+  text-align: center;
 }
-
 .form {
   display: grid;
   gap: 16px;
 }
-
 .form-group {
   display: grid;
   gap: 6px;
 }
-
 .form-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .form-section {
   display: grid;
   gap: 16px;
 }
-
 .input {
   width: 100%;
   padding: 10px 12px;
@@ -88,11 +78,9 @@ textarea {
   border-radius: 6px;
   background: #ffffff;
 }
-
 .textarea {
   resize: vertical;
 }
-
 .button {
   padding: 10px 14px;
   border: 1px solid #2563eb;
@@ -101,43 +89,35 @@ textarea {
   color: #ffffff;
   cursor: pointer;
 }
-
 .button:disabled {
   opacity: 0.7;
   cursor: wait;
 }
-
 .button-secondary {
   border-color: #9ca3af;
   background: #ffffff;
   color: #1f2937;
 }
-
 .message {
   margin: 0;
   padding: 10px 12px;
   border-radius: 6px;
 }
-
 .message.success {
   background: #dcfce7;
   color: #166534;
 }
-
 .message.error {
   background: #fee2e2;
   color: #991b1b;
 }
-
 .details {
   display: grid;
   gap: 10px;
 }
-
 .details p {
   margin: 0;
 }
-
 .section-header {
   display: flex;
   align-items: flex-start;
@@ -146,12 +126,10 @@ textarea {
   flex-wrap: wrap;
   margin-bottom: 24px;
 }
-
 .section-title {
   margin: 0;
   font-size: 20px;
 }
-
 .subcard {
   display: grid;
   gap: 16px;
@@ -160,12 +138,10 @@ textarea {
   border-radius: 8px;
   background: #f9fafb;
 }
-
 .list {
   display: grid;
   gap: 12px;
 }
-
 .list-item {
   display: block;
   padding: 16px;
@@ -174,25 +150,21 @@ textarea {
   background: #f9fafb;
   color: inherit;
 }
-
 .list-item-title {
   margin: 0 0 4px;
   color: #111827;
   font-size: 18px;
 }
-
 .list-item p {
   margin: 0;
   color: #4b5563;
 }
-
 .nav-links {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 24px;
 }
-
 @media (max-width: 640px) {
   .card {
     padding: 20px;
