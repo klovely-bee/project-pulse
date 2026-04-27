@@ -1,5 +1,6 @@
 package com.projectpulse.backend.team.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,4 +16,7 @@ public class TeamResponse {
 
     private Long id;
     private String name;
+    private Long sectionId;
+    private List<TeamUserResponse> students;
+    private List<TeamUserResponse> instructors;
 }

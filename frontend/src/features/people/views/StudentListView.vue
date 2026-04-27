@@ -3,7 +3,7 @@
     <p class="eyebrow">People · UC-15</p>
     <h2>Find Students</h2>
     <div class="toolbar">
-      <input class="search-input" v-model="query" placeholder="Search by name…" @keyup.enter="search" />
+      <input class="search-input" v-model="query" type="text" placeholder="Search by name…" @keyup.enter="search" />
       <button class="btn" @click="search">Search</button>
       <button class="btn btn-ghost" @click="reset">Reset</button>
       <RouterLink to="/people/students/invite" class="btn btn-primary">+ Invite Student</RouterLink>
@@ -42,12 +42,12 @@ import { findStudents, deleteStudent } from '../api/studentsApi.js'
 const students = ref([]), query = ref(''), loading = ref(false), error = ref(''), deleting = ref(null)
 async function search() {
   loading.value = true; error.value = ''
-  try { students.value = await findStudents(query.value) } catch (e) { error.value = e.message } finally { loading.value = false }
+  try { students.value = await findStudents(query.value) } catch (e) { error.value = e.response?.data?.message || '' } finally { loading.value = false }
 }
 function reset() { query.value = ''; search() }
 async function confirmDelete() {
   try { await deleteStudent(deleting.value.id); students.value = students.value.filter(s => s.id !== deleting.value.id); deleting.value = null }
-  catch (e) { error.value = e.message; deleting.value = null }
+  catch (e) { error.value = e.response?.data?.message || ''; deleting.value = null }
 }
 onMounted(search)
 </script>

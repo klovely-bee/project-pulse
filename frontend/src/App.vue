@@ -4,7 +4,7 @@ import { RouterView, useRoute } from 'vue-router'
 import AppShell from './layouts/AppShell.vue'
 
 const route = useRoute()
-const isPublicRoute = computed(() => route.meta.public)
+const isPublicRoute = computed(() => Boolean(route.meta.public))
 </script>
 
 <template>

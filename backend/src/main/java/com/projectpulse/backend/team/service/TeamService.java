@@ -6,6 +6,7 @@ import com.projectpulse.backend.team.domain.Team;
 import com.projectpulse.backend.team.dto.AssignUsersRequest;
 import com.projectpulse.backend.team.dto.CreateTeamRequest;
 import com.projectpulse.backend.team.dto.TeamResponse;
+import com.projectpulse.backend.team.dto.TeamUserResponse;
 import com.projectpulse.backend.team.dto.UpdateTeamRequest;
 import com.projectpulse.backend.team.repository.TeamRepository;
 import com.projectpulse.backend.user.domain.User;
@@ -45,11 +46,21 @@ public class TeamService {
                 .toList();
     }
 
+    public TeamResponse getTeamById(Long id) {
+        return toTeamResponse(findTeamById(id));
+    }
+
     public TeamResponse updateTeam(UpdateTeamRequest request) {
         Team team = teamRepository.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("Team not found with id: " + request.getId()));
 
         team.setName(request.getName());
+
+        if (request.getSectionId() != null) {
+            Section section = sectionRepository.findById(request.getSectionId())
+                    .orElseThrow(() -> new RuntimeException("Section not found with id: " + request.getSectionId()));
+            team.setSection(section);
+        }
 
         Team savedTeam = teamRepository.save(team);
         return toTeamResponse(savedTeam);
@@ -106,6 +117,20 @@ public class TeamService {
         return TeamResponse.builder()
                 .id(team.getId())
                 .name(team.getName())
+                .sectionId(team.getSection() != null ? team.getSection().getId() : null)
+                .students(team.getStudents().stream().map(this::toTeamUserResponse).toList())
+                .instructors(team.getInstructors().stream().map(this::toTeamUserResponse).toList())
+                .build();
+    }
+
+    private TeamUserResponse toTeamUserResponse(User user) {
+        return TeamUserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .active(user.isActive())
                 .build();
     }
 

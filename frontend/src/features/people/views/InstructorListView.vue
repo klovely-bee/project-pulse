@@ -3,7 +3,7 @@
     <p class="eyebrow">People · UC-21</p>
     <h2>Find Instructors</h2>
     <div class="toolbar">
-      <input class="search-input" v-model="query" placeholder="Search by name…" @keyup.enter="search" />
+      <input class="search-input" v-model="query" type="text" placeholder="Search by name…" @keyup.enter="search" />
       <button class="btn" @click="search">Search</button>
       <button class="btn btn-ghost" @click="reset">Reset</button>
       <RouterLink to="/people/instructors/invite" class="btn btn-primary">+ Invite Instructor</RouterLink>
@@ -33,7 +33,7 @@ import { findInstructors, deactivateInstructor, reactivateInstructor } from '../
 const instructors = ref([]), query = ref(''), loading = ref(false), error = ref('')
 async function search() {
   loading.value = true; error.value = ''
-  try { instructors.value = await findInstructors(query.value) } catch (e) { error.value = e.message } finally { loading.value = false }
+  try { instructors.value = await findInstructors(query.value) } catch (e) { error.value = e.response?.data?.message || '' } finally { loading.value = false }
 }
 function reset() { query.value = ''; search() }
 async function toggleStatus(i) {
@@ -41,7 +41,7 @@ async function toggleStatus(i) {
     const updated = i.active ? await deactivateInstructor(i.id) : await reactivateInstructor(i.id)
     const idx = instructors.value.findIndex(x => x.id === i.id)
     if (idx !== -1) instructors.value[idx] = updated
-  } catch (e) { error.value = e.message }
+  } catch (e) { error.value = e.response?.data?.message || '' }
 }
 onMounted(search)
 </script>
