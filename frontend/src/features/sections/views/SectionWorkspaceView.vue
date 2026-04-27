@@ -5,6 +5,7 @@
     <p>Reserved for section search, detail, create, edit, and active-week management.</p>
   </section>
 </template>
-
 <script setup>
+import { onMounted } from 'vue'
+onMounted(() => { document.title = 'Homepage | Project Pulse' })
 </script>
