@@ -12,6 +12,10 @@ export function getTeamsBySection(sectionId) {
   return apiClient.get(`/teams/section/${sectionId}`)
 }
 
+export function getTeamById(id) {
+  return apiClient.get(`/teams/${id}`)
+}
+
 export function updateTeam(data) {
   return apiClient.put(`/teams/${resolveTeamId(data)}`, data)
 }

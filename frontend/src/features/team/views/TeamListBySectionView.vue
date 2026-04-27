@@ -5,6 +5,8 @@ import { deleteTeam, getTeamsBySection } from '../services/teamApi'
 
 const route = useRoute()
 const sectionId = route.params.sectionId
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+const isAdminUser = currentUser?.role === 'ADMIN'
 
 const teams = ref([])
 const isLoading = ref(false)
@@ -54,10 +56,10 @@ onMounted(() => {
       </div>
 
       <div class="nav-links">
-        <RouterLink class="button button-secondary" :to="`/sections/${sectionId}`">
+        <RouterLink v-if="isAdminUser" class="button button-secondary" :to="`/sections/${sectionId}`">
           Back to Section Details
         </RouterLink>
-        <RouterLink class="button" :to="`/teams/create?sectionId=${sectionId}`">Create Team</RouterLink>
+        <RouterLink v-if="isAdminUser" class="button" :to="`/teams/create?sectionId=${sectionId}`">Create Team</RouterLink>
       </div>
 
       <p v-if="successMessage" class="message success">{{ successMessage }}</p>
@@ -68,16 +70,19 @@ onMounted(() => {
 
       <div v-else class="list">
         <div v-for="team in teams" :key="team.id" class="list-item">
-          <h2 class="list-item-title">{{ team.name }}</h2>
+          <RouterLink class="list-item-title" :to="`/teams/${team.id}`">{{ team.name }}</RouterLink>
 
           <div class="form-actions">
-            <RouterLink class="button" :to="`/teams/${team.id}/edit?sectionId=${sectionId}`">
+            <RouterLink class="button" :to="`/teams/${team.id}`">
+              View
+            </RouterLink>
+            <RouterLink v-if="isAdminUser" class="button" :to="`/teams/${team.id}/edit?sectionId=${sectionId}`">
               Edit
             </RouterLink>
-            <button class="button button-secondary" type="button" @click="handleDelete(team.id)">
+            <button v-if="isAdminUser" class="button button-secondary" type="button" @click="handleDelete(team.id)">
               Delete
             </button>
-            <RouterLink class="button" :to="`/teams/${team.id}/assignments?sectionId=${sectionId}`">
+            <RouterLink v-if="isAdminUser" class="button" :to="`/teams/${team.id}/assignments?sectionId=${sectionId}`">
               Assignments
             </RouterLink>
           </div>

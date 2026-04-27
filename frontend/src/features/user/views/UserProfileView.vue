@@ -1,15 +1,27 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { getUserById } from '../services/userApi'
 
 const route = useRoute()
+const router = useRouter()
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
 const user = ref(null)
 const successMessage = ref('')
 const errorMessage = ref('')
 const isLoading = ref(false)
 
 async function loadUser() {
+  if (!currentUser?.id) {
+    await router.replace('/login')
+    return
+  }
+
+  if (currentUser.role !== 'ADMIN' && String(route.params.id) !== String(currentUser.id)) {
+    await router.replace(`/users/${currentUser.id}`)
+    return
+  }
+
   successMessage.value = ''
   errorMessage.value = ''
   isLoading.value = true
@@ -45,7 +57,6 @@ onMounted(loadUser)
         <p><strong>First Name:</strong> {{ user.firstName }}</p>
         <p><strong>Last Name:</strong> {{ user.lastName }}</p>
         <p><strong>Role:</strong> {{ user.role }}</p>
-        <p><strong>Active:</strong> {{ user.active }}</p>
       </div>
 
       <div class="nav-links">

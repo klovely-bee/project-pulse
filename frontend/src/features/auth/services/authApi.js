@@ -11,3 +11,7 @@ export function registerInstructor(data) {
 export function login(data) {
   return apiClient.post('/auth/login', data)
 }
+
+export function logout() {
+  return apiClient.post('/auth/logout')
+}

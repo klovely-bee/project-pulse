@@ -6,7 +6,7 @@
       <input class="search-input" v-model="query" type="text" placeholder="Search by name…" @keyup.enter="search" />
       <button class="btn" @click="search">Search</button>
       <button class="btn btn-ghost" @click="reset">Reset</button>
-      <RouterLink to="/people/instructors/invite" class="btn btn-primary">+ Invite Instructor</RouterLink>
+      <RouterLink v-if="isAdminUser" to="/people/instructors/invite" class="btn btn-primary">+ Invite Instructor</RouterLink>
     </div>
     <p class="error" v-if="error">{{ error }}</p>
     <p class="muted" v-if="loading">Loading…</p>
@@ -19,7 +19,15 @@
           <td><span class="badge" :class="i.active ? 'badge-green' : 'badge-gray'">{{ i.active ? 'Active' : 'Inactive' }}</span></td>
           <td>
             <RouterLink :to="`/people/instructors/${i.id}`" class="btn btn-sm">View</RouterLink>
-            <button class="btn btn-sm" :class="i.active ? 'btn-outline' : 'btn-primary'" style="margin-left:6px" @click="toggleStatus(i)">{{ i.active ? 'Deactivate' : 'Reactivate' }}</button>
+            <button
+              v-if="isAdminUser"
+              class="btn btn-sm"
+              :class="i.active ? 'btn-outline' : 'btn-primary'"
+              style="margin-left:6px"
+              @click="toggleStatus(i)"
+            >
+              {{ i.active ? 'Deactivate' : 'Reactivate' }}
+            </button>
           </td>
         </tr>
       </tbody>
@@ -30,6 +38,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { findInstructors, deactivateInstructor, reactivateInstructor } from '../api/instructorsApi.js'
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+const isAdminUser = currentUser?.role === 'ADMIN'
 const instructors = ref([]), query = ref(''), loading = ref(false), error = ref('')
 async function search() {
   loading.value = true; error.value = ''

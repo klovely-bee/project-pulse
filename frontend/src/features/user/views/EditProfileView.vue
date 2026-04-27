@@ -1,17 +1,17 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { getUserById, updateUser } from '../services/userApi'
 
 const route = useRoute()
+const router = useRouter()
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
 
 const form = reactive({
   id: Number(route.params.id),
   email: '',
   firstName: '',
   lastName: '',
-  role: '',
-  active: true,
 })
 
 const successMessage = ref('')
@@ -20,6 +20,16 @@ const isSubmitting = ref(false)
 const isLoading = ref(false)
 
 async function loadUser() {
+  if (!currentUser?.id) {
+    await router.replace('/login')
+    return
+  }
+
+  if (currentUser.role !== 'ADMIN' && String(route.params.id) !== String(currentUser.id)) {
+    await router.replace(`/users/${currentUser.id}/edit`)
+    return
+  }
+
   errorMessage.value = ''
   isLoading.value = true
 
@@ -31,8 +41,6 @@ async function loadUser() {
     form.email = user.email
     form.firstName = user.firstName
     form.lastName = user.lastName
-    form.role = user.role
-    form.active = user.active
   } catch (error) {
     errorMessage.value = error.response?.data?.message || 'Failed to load user profile'
   } finally {
@@ -47,8 +55,10 @@ async function handleSubmit() {
 
   try {
     const payload = {
-      ...form,
       id: Number(route.params.id),
+      email: form.email,
+      firstName: form.firstName,
+      lastName: form.lastName,
     }
     const response = await updateUser(route.params.id, payload)
     console.log(response.data.data)
@@ -85,18 +95,6 @@ onMounted(loadUser)
         <div class="form-group">
           <label for="lastName">Last Name</label>
           <input id="lastName" v-model="form.lastName" class="input" type="text" required />
-        </div>
-
-        <div class="form-group">
-          <label for="role">Role</label>
-          <input id="role" v-model="form.role" class="input" type="text" required />
-        </div>
-
-        <div class="form-group">
-          <label>
-            <input v-model="form.active" type="checkbox" />
-            Active
-          </label>
         </div>
 
         <p v-if="successMessage" class="message success">{{ successMessage }}</p>

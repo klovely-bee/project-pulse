@@ -10,7 +10,7 @@
         <div class="card"><p class="label">Email</p><p>{{ instructor.email }}</p></div>
         <div class="card"><p class="label">Status</p><span class="badge" :class="instructor.active ? 'badge-green' : 'badge-gray'">{{ instructor.active ? 'Active' : 'Inactive' }}</span></div>
       </div>
-      <div class="actions">
+      <div v-if="isAdminUser" class="actions">
         <button class="btn" :class="instructor.active ? 'btn-outline' : 'btn-primary'" @click="toggleStatus" :disabled="toggling">
           {{ instructor.active ? 'Deactivate (UC-23)' : 'Reactivate (UC-24)' }}
         </button>
@@ -22,6 +22,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getInstructor, deactivateInstructor, reactivateInstructor } from '../api/instructorsApi.js'
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+const isAdminUser = currentUser?.role === 'ADMIN'
 const route = useRoute()
 const instructor = ref(null), loading = ref(false), error = ref(''), toggling = ref(false)
 onMounted(async () => { loading.value = true; try { instructor.value = await getInstructor(route.params.id) } catch (e) { error.value = e.message } finally { loading.value = false } })

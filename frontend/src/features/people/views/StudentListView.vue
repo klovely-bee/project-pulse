@@ -6,7 +6,18 @@
       <input class="search-input" v-model="query" type="text" placeholder="Search by name…" @keyup.enter="search" />
       <button class="btn" @click="search">Search</button>
       <button class="btn btn-ghost" @click="reset">Reset</button>
-      <RouterLink to="/people/students/invite" class="btn btn-primary">+ Invite Student</RouterLink>
+      <RouterLink v-if="isAdminUser" to="/people/students/invite" class="btn btn-primary">+ Invite Student</RouterLink>
+    </div>
+    <div class="toolbar" style="margin-top:12px">
+      <input
+        class="search-input"
+        v-model="sectionLookupId"
+        type="number"
+        min="1"
+        placeholder="Enter section ID to find teams"
+        @keyup.enter="goToSectionTeams"
+      />
+      <button class="btn" @click="goToSectionTeams">Find Teams</button>
     </div>
     <p class="error" v-if="error">{{ error }}</p>
     <p class="muted" v-if="loading">Loading…</p>
@@ -19,7 +30,14 @@
           <td><span class="badge" :class="s.active ? 'badge-green' : 'badge-gray'">{{ s.active ? 'Active' : 'Inactive' }}</span></td>
           <td>
             <RouterLink :to="`/people/students/${s.id}`" class="btn btn-sm">View</RouterLink>
-            <button class="btn btn-sm btn-danger" style="margin-left:6px" @click="deleting = s">Delete</button>
+            <button
+              v-if="isAdminUser"
+              class="btn btn-sm btn-danger"
+              style="margin-left:6px"
+              @click="deleting = s"
+            >
+              Delete
+            </button>
           </td>
         </tr>
       </tbody>
@@ -38,13 +56,25 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { findStudents, deleteStudent } from '../api/studentsApi.js'
-const students = ref([]), query = ref(''), loading = ref(false), error = ref(''), deleting = ref(null)
+const router = useRouter()
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null')
+const isAdminUser = currentUser?.role === 'ADMIN'
+const students = ref([]), query = ref(''), loading = ref(false), error = ref(''), deleting = ref(null), sectionLookupId = ref('')
 async function search() {
   loading.value = true; error.value = ''
   try { students.value = await findStudents(query.value) } catch (e) { error.value = e.response?.data?.message || '' } finally { loading.value = false }
 }
 function reset() { query.value = ''; search() }
+async function goToSectionTeams() {
+  error.value = ''
+  if (!sectionLookupId.value) {
+    error.value = 'Enter a section ID to find teams.'
+    return
+  }
+  await router.push(`/teams/section/${sectionLookupId.value}`)
+}
 async function confirmDelete() {
   try { await deleteStudent(deleting.value.id); students.value = students.value.filter(s => s.id !== deleting.value.id); deleting.value = null }
   catch (e) { error.value = e.response?.data?.message || ''; deleting.value = null }

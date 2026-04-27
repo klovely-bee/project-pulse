@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { logout } from '../features/auth/services/authApi'
 
 const route = useRoute()
 const router = useRouter()
@@ -32,6 +33,7 @@ const pageTitle = computed(() => {
     'section-weeks': 'Active Weeks',
     'team-create': 'Create Team',
     'team-list-by-section': 'Teams',
+    'team-detail': 'Team Details',
     'team-edit': 'Edit Team',
     'team-assignments': 'Team Assignments',
     students: 'Students',
@@ -96,6 +98,11 @@ const isAdminActive = computed(() => isAdminUser.value && (
 const isProfileActive = computed(() => route.path.startsWith('/users'))
 
 async function handleLogout() {
+  try {
+    await logout()
+  } catch {
+    // Local session cleanup should still proceed even if logout request fails.
+  }
   localStorage.removeItem('currentUser')
   await router.push('/login')
 }
@@ -118,7 +125,7 @@ async function handleLogout() {
           <span>Home</span>
         </RouterLink>
 
-        <details v-if="!isInstructorUser" class="sidebar-group" :open="isWarActive">
+        <details v-if="isStudentUser" class="sidebar-group" :open="isWarActive">
           <summary class="sidebar-summary" :class="{ active: isWarActive }">
             <span class="sidebar-icon">📝</span>
             <span>Weekly Activity Reports</span>
@@ -134,10 +141,10 @@ async function handleLogout() {
           </div>
         </details>
 
-        <details class="sidebar-group" :open="isReportsActive">
+        <details v-if="isStudentUser || isInstructorUser || isAdminUser" class="sidebar-group" :open="isReportsActive">
           <summary class="sidebar-summary" :class="{ active: isReportsActive }">
             <span class="sidebar-icon">📊</span>
-            <span>{{ isInstructorUser ? 'Reports' : 'Peer Evaluations' }}</span>
+            <span>{{ isStudentUser ? 'Peer Evaluations' : 'Reports' }}</span>
           </summary>
           <div class="sidebar-subnav">
             <RouterLink
@@ -145,7 +152,7 @@ async function handleLogout() {
               :class="{ active: route.path.startsWith('/reports') }"
               to="/reports"
             >
-              Reports
+              {{ isStudentUser ? 'My Evaluations' : 'Reporting Workspace' }}
             </RouterLink>
           </div>
         </details>
