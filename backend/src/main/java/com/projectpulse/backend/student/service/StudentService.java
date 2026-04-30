@@ -1,6 +1,5 @@
 package com.projectpulse.backend.student.service;
 
-import com.projectpulse.backend.config.EmailService;
 import com.projectpulse.backend.student.domain.Student;
 import com.projectpulse.backend.student.dto.InviteStudentRequest;
 import com.projectpulse.backend.student.repository.StudentRepository;
@@ -13,16 +12,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class StudentService {
+
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
 
-    public StudentService(StudentRepository studentRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public StudentService(StudentRepository studentRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
     }
 
     public List<Student> findStudents(String name) {
@@ -33,6 +31,7 @@ public class StudentService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email is already in use: " + request.getEmail());
         }
+
         String[] nameParts = splitName(request.getName());
         User savedUser = userRepository.save(User.builder()
                 .email(request.getEmail())
@@ -42,12 +41,6 @@ public class StudentService {
                 .role(Role.STUDENT)
                 .active(true)
                 .build());
-
-        try {
-            emailService.sendInviteEmail(request.getEmail(), request.getName(), request.getPassword());
-        } catch (Exception e) {
-            System.err.println("Failed to send invite email: " + e.getMessage());
-        }
 
         return toStudent(savedUser);
     }
@@ -60,6 +53,7 @@ public class StudentService {
     public void deleteStudent(Long id) {
         Student student = studentRepository.findByIdAndRole(id, Role.STUDENT)
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
         studentRepository.delete(student);
     }
 
@@ -79,6 +73,7 @@ public class StudentService {
         if (trimmedName.isEmpty()) {
             throw new RuntimeException("Name is required");
         }
+
         String[] parts = trimmedName.split("\\s+", 2);
         String firstName = parts[0];
         String lastName = parts.length > 1 ? parts[1] : "";
